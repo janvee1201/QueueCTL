@@ -106,16 +106,16 @@ stateDiagram-v2
     Dead --> [*]
 ```
 
-### 2. Concurrency Control & Locking
-To safely run **multiple worker processes in parallel without duplicate execution**, `queuectl` uses an embedded **SQLite database** with WAL (Write-Ahead Logging) enabled.
-- Job picking is made atomic via a SQLite `BEGIN IMMEDIATE` transaction.
-- When acquiring a job, the worker executes a single `UPDATE...RETURNING` statement to lock and claim a `pending` job in one step, preventing race conditions even with dozens of parallel workers.
+### 2. Multi-Worker Concurrency & Lock Management
+To coordinate **parallel worker execution without task duplication**, `queuectl` leverages an embedded **SQLite engine** operating in WAL (Write-Ahead Logging) mode:
+* **Atomic Job Acquisition**: Workers wrap job selection in a strict `BEGIN IMMEDIATE` transaction to block concurrent write conflicts.
+* **Single-Step Lock/Claim**: The state change is executed using a single, thread-safe `UPDATE...RETURNING` statement. This ensures a job is locked and assigned to a specific worker instantaneously, eliminating execution race conditions even under high worker volumes.
 
-### 3. Self-Healing & Dead Process Recovery
-If a worker process is force-killed (e.g., via `kill -9` or a power loss), it will leave its assigned job stuck in the `processing` state forever. `queuectl` handles this gracefully:
-- **Registry Heartbeat Check**: Every worker registers its PID and status in the database.
-- **Active Process Verification**: Before picking up new jobs, workers check if the PIDs of other "busy" workers are still running using `process.kill(pid, 0)`.
-- **Automatic Job Reclamation**: If a worker process is detected as dead, its entry is cleaned up and all jobs locked by it are immediately reset to `pending` so they can be re-run by the remaining pool.
+### 3. Fault-Tolerance & Self-Healing Workers
+If a worker crashes or is abruptly killed (e.g., system reboot, `kill -9`), the jobs assigned to it won't get stranded in the `processing` state. The queue handles worker failures dynamically:
+* **Worker Registry**: Each worker process logs its PID (Process ID) and activity status in the database.
+* **Liveliness Audits**: Prior to polling new tasks, active workers audit other registered workers. It checks process status using `process.kill(pid, 0)` to verify the target OS process is still running.
+* **Automatic Recovery**: If a worker process is found to have terminated, the auditing worker removes it from the registry and immediately rolls back all jobs locked by it to the `pending` state, allowing the surviving worker pool to process them.
 
 ---
 
