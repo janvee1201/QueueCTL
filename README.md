@@ -91,13 +91,25 @@ Jobs transition through five strictly enforced states:
 - **`dead`**: Failed permanently. The job is moved to the Dead Letter Queue (DLQ) after exceeding its `max_retries`.
 
 ```mermaid
-graph TD
-    A[pending] -->|Picked up by Worker| B[processing]
-    B -->|Command returns 0| C[completed]
-    B -->|Command fails / exits non-zero| D[failed]
-    D -->|attempts < max_retries| A
-    D -->|attempts >= max_retries| E[dead / DLQ]
-    E -->|Manual retry command| A
+stateDiagram-v2
+    [*] --> Pending : Enqueue (queuectl enqueue)
+    Pending --> Processing : Worker locks & claims job
+    
+    state Processing {
+        [*] --> Executing
+        Executing --> Executing : Running cmd
+    }
+    
+    Processing --> Completed : Command returns 0
+    Processing --> Failed : Command exits non-zero
+    
+    Failed --> Pending : Retry (attempts < max_retries) with backoff
+    Failed --> Dead : DLQ (attempts >= max_retries)
+    
+    Dead --> Pending : Manual Retry (queuectl dlq retry)
+    
+    Completed --> [*]
+    Dead --> [*]
 ```
 
 ### 2. Concurrency Control & Locking
