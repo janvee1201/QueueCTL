@@ -17,6 +17,7 @@ function executeCommand(command, options = {}) {
       cwd: options.cwd || process.cwd(),
       env: options.env ? { ...process.env, ...options.env } : process.env,
       maxBuffer: options.maxBuffer || 1024 * 1024 * 10, // 10 MB default max buffer
+      shell: process.platform === 'win32' ? 'powershell.exe' : undefined,
     };
 
     const child = child_process.exec(command, execOptions, (error, stdout = '', stderr = '') => {
