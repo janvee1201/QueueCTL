@@ -1,8 +1,8 @@
-# 🚀 QueueCTL
+# <p align="center"><a href="https://git.io/typing-svg"><img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=38&duration=3000&pause=1000&color=39d353&center=true&vCenter=true&width=450&lines=QueueCTL;Reliable+Job+Queue;Concurrency-Safe" alt="QueueCTL" /></a></p>
 
-A modern, production-grade, and concurrency-safe CLI background job queue system built with **Node.js** and **SQLite**.
+A highly reliable, production-ready CLI task scheduler and job queue engine powered by Node.js and SQLite.
 
-`queuectl` provides a robust architecture for managing asynchronous background tasks, utilizing atomic transactions for parallel workers, automatic retry logic with exponential backoff, dead letter queue (DLQ) tracking, and an interactive system dashboard.
+`queuectl` provides a robust architecture for managing asynchronous background tasks, utilizing transactional SQLite database operations for multiple parallel workers, automated retries with intelligent exponential backoff, self-healing process recovery, and a beautiful interactive dashboard for status tracking.
 
 ### 🎥 Working CLI Demo Video
 You can watch a live demo of the CLI system and its various features in action here: [QueueCTL CLI Working Demo](https://drive.google.com/file/d/1hMid7ylr-wsrhKXQY82EO1HE92eJ_w4P/view?usp=sharing)
