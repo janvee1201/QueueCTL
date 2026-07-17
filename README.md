@@ -238,6 +238,6 @@ To manually verify and test the job queue functionality, follow these demo steps
    queuectl status
    ```
 
-## 📝 Key Design Assumptions & Trade-offs
-1. **SQLite over JSON File**: We chose SQLite instead of flat-file JSON storage to handle true parallel execution. SQLite provides robust, OS-level file locking and ACID transactions that prevent corruption under multi-process read/write operations.
-2. **Process ID Check over Heartbeat Sockets**: Rather than spinning up TCP sockets or heavy daemon loops to check worker health, workers verify that PIDs stored in the database are alive. This keeps the application 100% serverless, zero-dependency, and lightweight.
+## 🧠 Core Engineering Trade-offs & Rationale
+1. **SQLite Database vs. Flat JSON Files**: To guarantee safe, concurrent execution across multiple worker processes, we utilize an embedded SQLite engine instead of basic JSON file storage. SQLite provides robust, OS-level file locks and ACID compliance, which fully eliminates the risk of database corruption when multiple processes read and write simultaneously.
+2. **Process ID Checks vs. TCP Heartbeat Sockets**: To verify worker process health, workers query active OS process IDs (PIDs) from the database rather than running complex daemon loops or heavy network sockets. This approach ensures the framework remains completely lightweight, zero-dependency, and serverless.
