@@ -5,7 +5,7 @@ A highly reliable, production-ready CLI task scheduler and job queue engine powe
 `queuectl` provides a robust architecture for managing asynchronous background tasks, utilizing transactional SQLite database operations for multiple parallel workers, automated retries with intelligent exponential backoff, self-healing process recovery, and a beautiful interactive dashboard for status tracking.
 
 ### 🎥 Working CLI Demo Video
-You can watch a live demo of the CLI system and its various features in action here: [QueueCTL CLI Working Demo](https://drive.google.com/file/d/1hMid7ylr-wsrhKXQY82EO1HE92eJ_w4P/view?usp=sharing)
+You can watch a live demo of the CLI system and its various features in action here: [QueueCTL CLI Working Demo](https://drive.google.com/file/d/1k4Ea0mmEMT-eomCqlLNdJFvCy99DyS1s/view?usp=sharing)
 
 ---
 
