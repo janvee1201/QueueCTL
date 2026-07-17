@@ -69,7 +69,8 @@ class Worker {
               if (result.success) {
                 await queueManager.markCompleted(job.id);
               } else {
-                const errorMessage = result.stderr || (result.error && result.error.message) || 'Execution failed';
+                const rawError = result.stderr || (result.error && result.error.message) || 'Execution failed';
+                const errorMessage = rawError.split(/\r?\n/)[0].trim();
                 await queueManager.markFailed(job.id, errorMessage);
               }
               break;
