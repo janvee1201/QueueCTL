@@ -57,26 +57,20 @@ Developed for high-throughput reliability.
 
 ### 2. Status Dashboard (`queuectl status`)
 
-```ansi
-┌────────────────────────────────────────────────────────┐
-│  SYSTEM DASHBOARD                                      │
-├────────────────────────────────────────────────────────┤
-│                                                        │
-│  Workers Active  ● 3 running                            │
-│  Total Jobs      12                                    │
-│                                                        │
-├────────────────────────────────────────────────────────┤
-│  JOB BREAKDOWN                                         │
-├────────────────────────────────────────────────────────┤
-│                                                        │
-│  ● Pending       ██████░░░░░░░░░░░░░░  3/12            │
-│  ◎ Processing    ████░░░░░░░░░░░░░░░░  2/12            │
-│  ✓ Completed     ████████░░░░░░░░░░░░  5/12            │
-│  ▲ Failed        ██░░░░░░░░░░░░░░░░░░  1/12            │
-│  × Dead (DLQ)    ██░░░░░░░░░░░░░░░░░░  1/12            │
-│                                                        │
-└────────────────────────────────────────────────────────┘
-```
+The `status` command provides a visual overview of active workers and the real-time breakdown of enqueued jobs:
+
+> [!TIP]
+> ### 📊 QueueCTL System Status
+> 
+> **Workers Active:** `👷 3 running` &nbsp;&nbsp;|&nbsp;&nbsp; **Total Jobs:** `📁 12`
+> 
+> | Job State | Progress Bar | Count / Share |
+> | :--- | :--- | :---: |
+> | **⏳ Pending** | `██████░░░░░░░░░░░░░░` | **3** (25%) |
+> | **⚙️ Processing** | `████░░░░░░░░░░░░░░░░` | **2** (17%) |
+> | **✅ Completed** | `██████████░░░░░░░░░░` | **5** (42%) |
+> | **⚠️ Failed** | `██░░░░░░░░░░░░░░░░░░` | **1** (8%) |
+> | **💀 Dead (DLQ)** | `██░░░░░░░░░░░░░░░░░░` | **1** (8%) |
 
 ---
 
