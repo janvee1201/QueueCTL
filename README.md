@@ -122,7 +122,7 @@ If a worker process is force-killed (e.g., via `kill -9` or a power loss), it wi
 ### Installation
 1. Clone the repository and navigate to the directory:
    ```bash
-   git clone https://github.com/KrishnaGupta2403/QueueCTL.git
+   git clone https://github.com/janvee1201/QueueCTL.git
    cd queuectl
    ```
 2. Install dependencies:
@@ -211,41 +211,26 @@ Run the test suite:
 npm test
 ```
 
-### Reference Demo Tests
+### Demo Testing Steps
 
-Below is an illustrative reference of how integration scenarios are structured and verified programmatically within `tests/integration.test.js`:
+To manually verify and test the job queue functionality, follow these demo steps:
 
-```javascript
-const queueManager = require('../queue/queueManager');
-const { executeCommand } = require('../worker/executor');
-const { JobState } = require('../models/Job');
-
-describe('Job Queue Integration Scenarios', () => {
-  // Scenario 1: Successful Job execution and state transitions
-  test('Successful Job execution and state transitions', async () => {
-    // 1. Enqueue job
-    const job = await queueManager.addJob({ command: 'echo success' });
-    expect(job.state).toBe(JobState.PENDING);
-
-    // 2. Worker picks up job atomically
-    const processingJob = await queueManager.pickNextJob('worker-demo');
-    expect(processingJob.id).toBe(job.id);
-    expect(processingJob.state).toBe(JobState.PROCESSING);
-    expect(processingJob.locked_by).toBe('worker-demo');
-
-    // 3. Executor runs command
-    const result = await executeCommand(processingJob.command);
-    expect(result.success).toBe(true);
-
-    // 4. Mark job completed
-    const completedJob = await queueManager.markCompleted(processingJob.id);
-    expect(completedJob.state).toBe(JobState.COMPLETED);
-    expect(completedJob.locked_by).toBeNull();
-  });
-});
-```
-
----
+1. **Enqueue a Job**: Add a job to the queue:
+   ```bash
+   queuectl enqueue '{"id":"demo-job","command":"echo Hello World"}'
+   ```
+2. **Verify Job Insertion**: List jobs to confirm it was added:
+   ```bash
+   queuectl list
+   ```
+3. **Start Workers**: Run workers to pick up and process the enqueued job:
+   ```bash
+   queuectl worker start --count 1
+   ```
+4. **Check Status**: Check the job state (should be completed):
+   ```bash
+   queuectl status
+   ```
 
 ## 📝 Key Design Assumptions & Trade-offs
 1. **SQLite over JSON File**: We chose SQLite instead of flat-file JSON storage to handle true parallel execution. SQLite provides robust, OS-level file locking and ACID transactions that prevent corruption under multi-process read/write operations.

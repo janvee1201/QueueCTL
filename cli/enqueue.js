@@ -58,14 +58,15 @@ async function enqueueCommand(inputData = null, options = {}) {
       throw new Error('Command is required. Provide a JSON string or use --command <cmd>.');
     }
 
+    const pc = require('picocolors');
     const job = await queueManager.addJob(jobData);
 
     if (!options.silent) {
-      console.log('Job Added Successfully');
-      console.log(`ID: ${job.id}`);
-      console.log(`Command: ${job.command}`);
-      console.log(`State: ${job.state}`);
-      console.log(`Max Retries: ${job.max_retries}`);
+      console.log(pc.green('✔ Job Added Successfully'));
+      console.log(`${pc.bold('ID:')}         ${pc.cyan(job.id)}`);
+      console.log(`${pc.bold('Command:')}    ${pc.white(job.command)}`);
+      console.log(`${pc.bold('State:')}      ${pc.yellow(job.state)}`);
+      console.log(`${pc.bold('Max Retries:')} ${pc.magenta(job.max_retries)}`);
     }
 
     return job;
